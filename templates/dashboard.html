@@ -1,0 +1,311 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Weather Dashboard</title>
+  <!-- Bootstrap CSS & Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --card-bg: white;
+      --text-color: #0d6efd;
+    }
+    .options-bar {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    }
+    .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    }
+
+    body.dark-mode {
+      --card-bg: #2e2e3a;
+      --text-color: #f8f9fa;
+    }
+    /* Background & Animated Gradient */
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background 1s;
+      background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee);
+      background-size: 400% 400%;
+      animation: gradientFlow 15s ease infinite;
+    }
+    /* Optional alternative weather-specific backgrounds */
+    body.sunny {
+      background: linear-gradient(to top, #fceabb, #f8b500);
+    }
+    body.cloudy {
+      background: linear-gradient(to top, #d7d2cc, #304352);
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Layers for Dynamic Weather Effects */
+    .rain,
+    .clouds,
+    .sun-rays {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .rain.active,
+    .clouds.active,
+    .sun-rays.active {
+      opacity: 1;
+    }
+    .raindrop {
+      position: absolute;
+      width: 2px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.4);
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      to { transform: translateY(100vh); }
+    }
+    .sun-rays {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .sun {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, #fff59d, #fdd835);
+      border-radius: 50%;
+      box-shadow: 0 0 50px 15px rgba(255, 223, 0, 0.4);
+    }
+    .sun::before,
+    .sun::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 140px;
+      height: 140px;
+      border: 8px solid rgba(255, 223, 0, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotateRays 10s linear infinite;
+    }
+    .sun::after {
+      width: 180px;
+      height: 180px;
+      animation-duration: 15s;
+    }
+    @keyframes rotateRays {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .custom-cloud {
+      position: absolute;
+      width: 1200px;
+      height: 600px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 40px 0 #fff, 80px 0 #fff;
+      opacity: 0.6;
+      animation: driftClouds 30s ease-in-out infinite alternate;
+    }
+    @keyframes driftClouds {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-40px); }
+    }
+    /* Dashboard Card Styling */
+    .dashboard-card {
+      position: relative;
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 100%;
+      color: var(--text-color);
+      z-index: 1;
+      transition: background-color 0.5s, color 0.5s;
+    }
+    /* Dark Mode Toggle */
+    .dark-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 2rem;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body class="rainy">
+  <!-- Dynamic Background Layers -->
+  <div class="rain active" id="rain"></div>
+  <div class="clouds" id="clouds"></div>
+  <div class="sun-rays" id="sunRays"></div>
+
+  <!-- Dark Mode Toggle Switch -->
+  <div class="dark-toggle">
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="darkModeToggle">
+      <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+    </div>
+  </div>
+
+  <!-- Dashboard Card with Weather Info -->
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div class="dashboard-card shadow-lg">
+          <h2 class="text-center mb-4">🌤️ Weather Dashboard</h2>
+          <!-- Weather Search Form -->
+          <form method="GET" action="" class="mb-4">
+            <div class="input-group">
+              <input type="text" name="city" class="form-control" placeholder="Enter city..." required>
+              <button type="submit" class="btn btn-primary">Get Weather</button>
+            </div>
+          </form>
+          <!-- Weather Information Display -->
+          {% if weather %}
+            <div class="alert alert-info">
+              <h4>{{ weather.city }}</h4>
+              <p><strong>Temperature:</strong> {{ weather.temp }}°F</p>
+              <p><strong>Condition:</strong> {{ weather.desc }}</p>
+              <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Weather icon">
+            </div>
+          {% elif error %}
+            <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Options Bar for Weather Mode Switching -->
+  <div class="options-bar">
+    <button onclick="setWeather('rainy')" title="Rainy">
+      <i class="fas fa-cloud-showers-heavy"></i>
+    </button>
+    <button onclick="setWeather('sunny')" title="Sunny">
+      <i class="fas fa-sun"></i>
+    </button>
+    <button onclick="setWeather('cloudy')" title="Cloudy">
+      <i class="fas fa-cloud"></i>
+    </button>
+  </div>
+
+  <!-- JavaScript for Dynamic Background, Weather Mode, and Dark Mode -->
+  <script>
+    // Dark Mode Toggle
+    const darkToggle = document.getElementById('darkModeToggle');
+    darkToggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
+    // Rain Generation Function
+    const rainContainer = document.getElementById('rain');
+    function generateRain() {
+      rainContainer.innerHTML = '';
+      const dropCount = 100;
+      for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.classList.add('raindrop');
+        drop.style.left = Math.random() * 100 + 'vw';
+        drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+        drop.style.animationDelay = '-' + Math.random() * 2 + 's';
+        rainContainer.appendChild(drop);
+      }
+    }
+
+    // Clouds Generation Function
+    const cloudContainer = document.getElementById('clouds');
+    function generateClouds() {
+      cloudContainer.innerHTML = '';
+      const cloudCount = 6;
+      for (let i = 0; i < cloudCount; i++) {
+        const cloud = document.createElement('div');
+        cloud.classList.add('custom-cloud');
+        const top = Math.random() * 60 + '%';
+        const left = Math.random() * 100 + 'vw';
+        const scaleX = 10 + Math.random() * 2;
+        const scaleY = 10 + Math.random() * 0.3;
+        const opacity = 0.4 + Math.random() * 0.3;
+        const duration = 20 + Math.random() * 20;
+        cloud.style.top = top;
+        cloud.style.left = left;
+        cloud.style.opacity = opacity;
+        cloud.style.animationDuration = `${duration}s`;
+        cloud.style.transform = `scale(${scaleX}, ${scaleY})`;
+        cloudContainer.appendChild(cloud);
+      }
+    }
+
+    // Sun Generation Function
+    const sunContainer = document.getElementById('sunRays');
+    function generateSun() {
+      sunContainer.innerHTML = '<div class="sun"></div>';
+    }
+
+    // Set Weather Mode Function
+    function setWeather(type) {
+      // Clear any previous weather-specific classes and generated elements
+      document.body.classList.remove('rainy', 'sunny', 'cloudy');
+      rainContainer.classList.remove('active');
+      cloudContainer.classList.remove('active');
+      sunContainer.classList.remove('active');
+      rainContainer.innerHTML = '';
+      cloudContainer.innerHTML = '';
+      sunContainer.innerHTML = '';
+
+      switch (type) {
+        case 'rainy':
+          document.body.classList.add('rainy');
+          generateRain();
+          rainContainer.classList.add('active');
+          break;
+        case 'sunny':
+          document.body.classList.add('sunny');
+          generateSun();
+          sunContainer.classList.add('active');
+          break;
+        case 'cloudy':
+          document.body.classList.add('cloudy');
+          generateClouds();
+          cloudContainer.classList.add('active');
+          break;
+      }
+    }
+
+    // Initialize with rainy weather effect
+    generateRain();
+  </script>
+
+  <!-- Font Awesome JS for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

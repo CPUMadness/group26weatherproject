@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Welcome</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --card-bg: white;
+            --text-color: #0d6efd;
+        }
+
+        body.dark-mode {
+            --card-bg: #2e2e3a;
+            --text-color: #f8f9fa;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background 1s;
+            background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #fbc2eb, #a6c1ee);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+
+        body.sunny {
+            background: linear-gradient(to top, #fceabb, #f8b500);
+        }
+
+        body.cloudy {
+            background: linear-gradient(to top, #d7d2cc, #304352);
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .rain,
+        .clouds,
+        .sun-rays {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .rain.active,
+        .clouds.active,
+        .sun-rays.active {
+            opacity: 1;
+        }
+
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        .sun-rays {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sun {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #fff59d, #fdd835);
+            border-radius: 50%;
+            box-shadow: 0 0 50px 15px rgba(255, 223, 0, 0.4);
+        }
+
+        .sun::before,
+        .sun::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 140px;
+            height: 140px;
+            border: 8px solid rgba(255, 223, 0, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotateRays 10s linear infinite;
+        }
+
+        .sun::after {
+            width: 180px;
+            height: 180px;
+            animation-duration: 15s;
+        }
+
+        @keyframes rotateRays {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .custom-cloud {
+            position: absolute;
+            width: 1200px;
+            height: 600px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow:
+                40px 0 #fff,
+                80px 0 #fff;
+            opacity: 0.6;
+            animation: driftClouds 30s ease-in-out infinite alternate;
+        }
+
+        @keyframes driftClouds {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-40px);
+            }
+        }
+
+
+        .welcome-card {
+            position: relative;
+            background-color: var(--card-bg);
+            padding: 3rem;
+            border-radius: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            color: var(--text-color);
+            z-index: 1;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .weather-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-custom {
+            width: 100%;
+            margin: 0.5rem 0;
+            font-weight: 500;
+            padding: 0.75rem;
+        }
+
+        .options-bar {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 2;
+        }
+
+        .options-bar button {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .options-bar button:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .dark-toggle {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
+</head>
+
+<body class="rainy">
+
+    <div class="rain active" id="rain"></div>
+    <div class="clouds" id="clouds"></div>
+    <div class="sun-rays" id="sunRays"></div>
+
+    <div class="welcome-card text-center">
+        <div class="weather-icon" id="weatherIcon">
+            <i class="fas fa-cloud-showers-heavy"></i>
+        </div>
+        <h1>Welcome to WeatherApp</h1>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-custom">Login</a>
+        <a href="{% url 'signup' %}" class="btn btn-success btn-custom">Sign Up</a>
+
+        <div class="dark-toggle">
+            <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+            <input class="form-check-input" type="checkbox" id="darkModeToggle" />
+        </div>
+    </div>
+
+    <div class="options-bar">
+        <button onclick="setWeather('rainy')" title="Rainy">
+            <i class="fas fa-cloud-showers-heavy"></i>
+        </button>
+        <button onclick="setWeather('sunny')" title="Sunny">
+            <i class="fas fa-sun"></i>
+        </button>
+        <button onclick="setWeather('cloudy')" title="Cloudy">
+            <i class="fas fa-cloud"></i>
+        </button>
+    </div>
+
+    <script>
+        const rainContainer = document.getElementById('rain');
+        const cloudContainer = document.getElementById('clouds');
+        const sunContainer = document.getElementById('sunRays');
+        const icon = document.getElementById('weatherIcon');
+
+        const toggle = document.getElementById('darkModeToggle');
+        toggle.addEventListener('change', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        function generateRain() {
+            rainContainer.innerHTML = '';
+            const dropCount = 100;
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('raindrop');
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                drop.style.animationDelay = '-' + Math.random() * 2 + 's';
+                rainContainer.appendChild(drop);
+            }
+        }
+
+        function generateClouds() {
+            cloudContainer.innerHTML = '';
+            const cloudCount = 6;
+
+            for (let i = 0; i < cloudCount; i++) {
+                const cloud = document.createElement('div');
+                cloud.classList.add('custom-cloud');
+
+                const top = Math.random() * 60 + '%';
+                const left = Math.random() * 100 + 'vw';
+                const scaleX = 10 + Math.random() * 2; // Wide clouds
+                const scaleY = 10 + Math.random() * 0.3;
+                const opacity = 0.4 + Math.random() * 0.3;
+                const duration = 20 + Math.random() * 20;
+
+                cloud.style.top = top;
+                cloud.style.left = left;
+                cloud.style.opacity = opacity;
+                cloud.style.animationDuration = `${duration}s`;
+                cloud.style.transform = `scale(${scaleX}, ${scaleY})`;
+
+                cloudContainer.appendChild(cloud);
+            }
+        }
+
+
+
+        function generateSun() {
+            sunContainer.innerHTML = '<div class="sun"></div>';
+        }
+
+        function setWeather(type) {
+            document.body.classList.remove('rainy', 'sunny', 'cloudy');
+            rainContainer.classList.remove('active');
+            cloudContainer.classList.remove('active');
+            sunContainer.classList.remove('active');
+
+            rainContainer.innerHTML = '';
+            cloudContainer.innerHTML = '';
+            sunContainer.innerHTML = '';
+
+            switch (type) {
+                case 'rainy':
+                    document.body.classList.add('rainy');
+                    icon.innerHTML = '<i class="fas fa-cloud-showers-heavy"></i>';
+                    generateRain();
+                    rainContainer.classList.add('active');
+                    break;
+                case 'sunny':
+                    document.body.classList.add('sunny');
+                    icon.innerHTML = '<i class="fas fa-sun"></i>';
+                    generateSun();
+                    sunContainer.classList.add('active');
+                    break;
+                case 'cloudy':
+                    document.body.classList.add('cloudy');
+                    icon.innerHTML = '<i class="fas fa-cloud"></i>';
+                    generateClouds();
+                    cloudContainer.classList.add('active');
+                    break;
+            }
+        }
+
+        generateRain();
+    </script>
+</body>
+
+</html>
