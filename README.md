@@ -12,4 +12,4 @@ Citation for the use of AI (if any).  Your citation must include:
   Functions, Components, Pages, etc. that were affected.
 Remember that this is a no-shame class when it comes to AI, but you MUST cite its use!
 
-We used ChatGPT o3-mini-high to generate the basic outline code of our project, which created the basic pages of our project that we edited to fit our needs. The prompt used was the text of our project proposal + "create the code outline of this project". All files were affected.
+We used ChatGPT o3-mini-high to generate the basic outline code of our project. It created the basic pages of our project with working algorithms for the sign in. login, and api requests, that we edited to fit our needs. The prompt used was the text of our project proposal + "create the code outline of this project". All files were affected.
