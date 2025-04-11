@@ -50,7 +50,7 @@ The website is working and listening on Port 8000. This site  can be accessed at
 ## Step 2: Download and Upload the Project's Files
 1. Download the entire repo from this github.
 2. On Pythonanywhere, go to Files > Upload a file, and select the downloaded zip file.
-3. Go to Consoles > Bash and enter 'unzip group26_project'.
+3. Go to Consoles > Bash and enter `unzip group26_project`.
 ## Step 3: Create the Web App
 1. Go to Web > add a new web app.
 2. Choose manual configuration.
