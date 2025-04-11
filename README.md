@@ -2,7 +2,7 @@
 Group 26 Weather Project
 
 
-# Deployment in Pythonanywhere Instructions
+# Pythonanywhere Deployment Instructions
 ## Step 1: Create an account on [pythonanywhere.com](https://www.pythonanywhere.com).
 ## Step 2: Download and Upload the Project's Files
 1. Download the entire repo from this github.
