@@ -3,7 +3,7 @@
 
 
 # Requirements
-1. Python 3.12 or newer installed
+Python 3.12 or newer installed
 
 
 
