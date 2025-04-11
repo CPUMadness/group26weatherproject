@@ -34,11 +34,11 @@ application = get_wsgi_application()
 ```
 4. Replace `yourusername` with your pythonanywhere username
 ## Step 5: Set Variables
-1. In group26_project/settings.py, set `DEBUG = False`.
-2. Add the pythonanywhere domain to `ALLOWED_HOSTS`.
+1. In group26_project/settings.py, set `DEBUG = False` and update the `SECRET_KEY`.
+3. Add the pythonanywhere domain to `ALLOWED_HOSTS`.
 
    `ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']`
-3. In group26_project/weatherapp/views.py, replace the `API_KEY` with your own OpenWeather API key.
+4. In group26_project/weatherapp/views.py, replace the `API_KEY` with your own OpenWeather API key.
 
 ## Step 6: Migrate and Superuser
 1. Open the bash console and enter:
