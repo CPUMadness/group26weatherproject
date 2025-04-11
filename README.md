@@ -1,9 +1,5 @@
 
-#
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/OrUTyrN.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://i.imgur.com/DD2HkFX.png">
-</picture>
+# ![group26weatherproject](https://i.imgur.com/OrUTyrN.png)
 
 
 # Requirements
