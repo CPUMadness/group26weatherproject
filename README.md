@@ -1,5 +1,5 @@
 
-# ![group26weatherproject](https://i.imgur.com/OrUTyrN.png)
+# ![group26weatherproject](https://i.imgur.com/z06Exeq.png)
 
 
 # Requirements
